@@ -1,0 +1,9 @@
+POST  http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Chelsea",
+  "author": "Rigozu 6943209" ,
+  "url": "www.fdfsfdsa.com",
+  "likes": 9999999969
+}
