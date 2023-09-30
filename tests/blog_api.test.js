@@ -88,6 +88,29 @@ describe('HTTP POST', () => {
   })  
 })
 
+describe('HTTP DELETE', () => {
+  test('a blog can be deleted', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    console.log(blogsAtStart)
+    const blogToDelete = blogsAtStart[0]
+  
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+  
+    const blogsAtEnd = await helper.blogsInDb()
+  
+    expect(blogsAtEnd).toHaveLength(
+      helper.initialBlogs.length - 1
+    )
+  
+    const titles = blogsAtEnd.map(r => r.title)
+  
+    expect(titles).not.toContain(blogToDelete.title)
+  })
+})
+
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
@@ -96,3 +119,4 @@ afterAll(async () => {
 //npm test -- -t 'id checker'
 //npm test -- -t 'HTTP POST'
 //npm test -- -t 'empty title/url property'
+//npm test -- -t 'HTTP DELETE'
