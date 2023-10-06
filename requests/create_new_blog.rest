@@ -1,9 +1,10 @@
 POST  http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3Rpbmd0b2tlbiIsImlkIjoiNjUxZmVmNDY0NGVjNjg5ZDE3NzJkY2YwIiwiaWF0IjoxNjk2NTkxODYwfQ.HZ9oAs4VA6CxxNrNGCOdisxGti2f0cAVzeS2Kc6ERME
 
 {
-  "title": "Mudryk, Colwill, Sterling",
-  "author": "3-1" ,
-  "url": "www.chels.com",
-  "likes": 123
+  "url": "www.test.com",
+  "title": " test  blog",
+  "author": "TEst  Tes" ,
+  "likes": 69420
 }
