@@ -1,9 +1,12 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
+const jwt = require('jsonwebtoken')
+const bcrypt = require("bcryptjs");
+
 const helper = require('./test_helper.js')
 const api = supertest(app)
-const bcrypt = require('bcryptjs')
+
 
 const Blog = require('../models/blog.js')
 const User = require('../models/user')
@@ -37,15 +40,36 @@ describe('HTTP GET', () => {
 })
 
 describe('HTTP POST', () => {
+  let token = null
+  beforeEach(async () => {
+    await User.deleteMany({})
+
+    const hash = await bcrypt.hash('secret', 10)
+    const user = new User({
+      username: 'test man',
+      name: 'make',
+      passwordHash: hash,
+    })
+
+    await user.save()
+
+    const userForToken = {
+      username: user.username,
+      id: user.id,
+    }
+
+    token = jwt.sign(userForToken, process.env.SECRET)
+  })
   test('blog can be posted', async () => {
     const testblog = {
+      url: 'www.123.com',
       title: 'Moro mitä äijä',
       author: 'Moro make',
-      url: 'www.123.com',
       likes: '69'
     }
     await api
       .post('/api/blogs')
+      .set("Authorization", `Bearer ${token}`)
       .send(testblog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -65,6 +89,7 @@ describe('HTTP POST', () => {
     }
     await api
       .post('/api/blogs')
+      .set("Authorization", `Bearer ${token}`)
       .send(testblog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -82,6 +107,7 @@ describe('HTTP POST', () => {
 
     await api
       .post('/api/blogs')
+      .set("Authorization", `Bearer ${token}`)
       .send(testblog)
       .expect(400)
 
@@ -91,48 +117,93 @@ describe('HTTP POST', () => {
 })
 
 describe('HTTP DELETE', () => {
+  let token = null
+  beforeEach(async () => {
+    await User.deleteMany({})
+    await Blog.deleteMany({})
+
+    const hash = await bcrypt.hash('secret', 10)
+    const user = new User({
+      username: 'trest man',
+      name: 'tester make',
+      passwordHash: hash,
+    })
+
+    await user.save()
+
+    const userForToken = {
+      username: user.username,
+      id: user.id,
+    }
+
+    token = jwt.sign(userForToken, process.env.SECRET)
+
+    const testBlog = {
+      title: 'testing blog',
+      author: 'MAKE MAKE',
+      url: 'www.makez.com',
+      likes: 69
+    }
+
+    await api
+      .post("/api/blogs")
+      .set("Authorization", `Bearer ${token}`)
+      .send(testBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/)
+  })
   test('a blog can be deleted', async () => {
-    const blogsAtStart = await helper.blogsInDb()
-    console.log(blogsAtStart)
+    const blogsAtStart = await Blog.find({})
     const blogToDelete = blogsAtStart[0]
-  
+
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set("Authorization", `Bearer ${token}`)
       .expect(204)
   
     const blogsAtEnd = await helper.blogsInDb()
   
     expect(blogsAtEnd).toHaveLength(
-      helper.initialBlogs.length - 1
+      blogsAtStart.length - 1
     )
-  
     const titles = blogsAtEnd.map(r => r.title)
-  
     expect(titles).not.toContain(blogToDelete.title)
   })
 })
 
 describe('when there is initially one user at db', () => {
+  let token = null
   beforeEach(async () => {
     await User.deleteMany({})
 
-    const passwordHash = await bcrypt.hash('sekret', 10)
-    const user = new User({ username: 'root', passwordHash })
+    const hash = await bcrypt.hash('secret', 10)
+    const user = new User({
+      username: 'test man',
+      name: 'make',
+      passwordHash: hash,
+    })
 
     await user.save()
-  })
 
+    const userForToken = {
+      username: user.username,
+      id: user.id,
+    }
+
+    token = jwt.sign(userForToken, process.env.SECRET)
+  })
   test('creation succeeds with a fresh username', async () => {
     const usersAtStart = await helper.usersInDb()
 
     const newUser = {
       username: 'Make 52',
       name: 'Makeee123',
-      password: '1',
+      password: '1234',
     }
 
     await api
       .post('/api/users')
+      .set("Authorization", `Bearer ${token}`)
       .send(newUser)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -147,7 +218,7 @@ describe('when there is initially one user at db', () => {
     const usersAtStart = await helper.usersInDb()
 
     const newUser = {
-      username: 'root',
+      username: 'test man',
       name: 'Superuser',
       password: 'salainen',
     }
@@ -220,7 +291,7 @@ describe('when there is initially one user at db', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/)
 
-    expect(result.body.error).toContain("username must be at least 3 characters long")
+    expect(result.body.error).toContain("User validation failed: username: Path `username` (`ee`) is shorter than the minimum allowed length (3).")
 
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toHaveLength(usersAtStart.length)

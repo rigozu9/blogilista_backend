@@ -1,10 +1,10 @@
 POST  http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3Rpbmd0b2tlbiIsImlkIjoiNjUxZmVmNDY0NGVjNjg5ZDE3NzJkY2YwIiwiaWF0IjoxNjk2NTkxODYwfQ.HZ9oAs4VA6CxxNrNGCOdisxGti2f0cAVzeS2Kc6ERME
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1vaSIsImlkIjoiNjUyMjg3YTU0YTc0NmVmM2ZlYTMzZmU4IiwiaWF0IjoxNjk2NzYxNzkxfQ.ke2lNL5biHg52Of8cmSeVG5RaK9VZrbgwTw9RJoOYk8
 
 {
-  "url": "www.test.com",
-  "title": " test  blog",
-  "author": "TEst  Tes" ,
+  "url": "www.poupulate.com",
+  "title": " 4.22  blog",
+  "author": "TEst  TESTMAN" ,
   "likes": 69420
 }
