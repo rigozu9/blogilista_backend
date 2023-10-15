@@ -1,34 +1,44 @@
-const Blog = require('../models/blog.js') 
+const Blog = require('../models/blog')
 const User = require('../models/user')
 
-initialBlogs = [
-    {
-      "title": "Chelsea Blog",
-      "author": "Rigozu 9",
-      "url": "www.ktbffh.com",
-      "likes": 9999999969
-    },
-    {
-      "title": "Äpåsky Blog",
-      "author": "Make 9",
-      "url": "www.cheslearh.com",
-      "likes": 420
-    },
-  ]
-  
-  const blogsInDb = async () => {
-    const blogs = await Blog.find({})
-    return blogs.map(blog => blog.toJSON())
-  }
+const initialBlogs = [
+  {
+    title: "Canonical string reduction",
+    author: "Edsger W. Dijkstra",
+    url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+    likes: 12,
+  },
+  {
+    title: "First class tests",
+    author: "Robert C. Martin",
+    url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
+    likes: 10,
+  },
+]
 
-  const usersInDb = async () => {
-    const users = await User.find({})
-    return users.map(u => u.toJSON())
-  }
-  
-  module.exports = {
-    initialBlogs,
-    blogsInDb,
-    usersInDb,
+const initialUsers = [
+  { username: 'tester', password: 'secret' }
+]
+
+const nonExistingId = async () => {
+  const blog = new Blog({ title: 'willremovethissoon',  author: 'willremovethissoon',  url: 'willremovethissoon' })
+  await blog.save()
+  await blog.remove()
+
+  return blog._id.toString()
 }
-  
+
+const blogsInDb = async () => {
+  const notes = await Blog.find({})
+  return notes.map(blog => blog.toJSON())
+}
+
+const usersInDb = async () => {
+  const users = await User.find({})
+  return users.map(user => user.toJSON())
+}
+
+module.exports = {
+  initialBlogs, nonExistingId, blogsInDb,
+  usersInDb, initialUsers
+}
