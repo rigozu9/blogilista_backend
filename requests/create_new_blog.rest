@@ -1,6 +1,6 @@
 POST  http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1vaSIsImlkIjoiNjUyMjg3YTU0YTc0NmVmM2ZlYTMzZmU4IiwiaWF0IjoxNjk2NzYxNzkxfQ.ke2lNL5biHg52Of8cmSeVG5RaK9VZrbgwTw9RJoOYk8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1vcm8gZyIsImlkIjoiNjUyY2VjYWQ0MThlN2RiMmI5ZGU5NmYwIiwiaWF0IjoxNjk3NDQ0MTExfQ.EJmN69ghh1tD_baqEx8zPiZpkSSTxHuy5w6ASyVWAlg
 
 {
   "url": "www.poupulate.com",
