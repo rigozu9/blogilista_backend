@@ -38,11 +38,14 @@ router.post('/', userExtractor, async (request, response) => {
 })
 
 router.put('/:id', async (request, response) => {
-  const { title, url, author, likes } = request.body
+  const blog = request.body
+  const id = request.params.id
+  
+  const updatedBlog = await Blog.findByIdAndUpdate(id, blog, { new: true })
 
-  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id,  { title, url, author, likes }, { new: true })
-
-  response.json(updatedBlog)
+  response
+    .status(200)
+    .json(await updatedBlog.populate('user', { username: 1, name: 1 }))
 })
 
 router.delete('/:id', userExtractor, async (request, response) => {
